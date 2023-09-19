@@ -1,4 +1,5 @@
 import requests
+from datetime import date
 from flask import abort, current_app
 from requests import Response
 from werkzeug.datastructures import FileStorage
@@ -31,3 +32,21 @@ def post_ingest(file: FileStorage, data: dict = None) -> Response:
     else:
         current_app.logger.error(f"Bad response: {request_url} returned {response.status_code}")
         return abort(500)
+
+
+def calculate_days_remaining():
+
+    #  TODO replace with correct endpoint to fetch due_date
+    request_url = Config.DATA_STORE_API_HOST + "/due-date"
+
+    response = requests.get(request_url)
+
+    if response.status_code == 200:
+        due_date = response.due_date
+        delta = due_date - date.today()
+        return delta.days
+
+    else:
+        current_app.logger.error(f"Unable to fetch due date: {request_url} returned {response.status_code}")
+        return abort(500)
+
