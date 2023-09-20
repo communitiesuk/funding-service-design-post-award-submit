@@ -10,12 +10,8 @@ def test_index_page(flask_test_client):
 def test_upload_page(flask_test_client):
     response = flask_test_client.get("/upload")
     assert response.status_code == 200
-
-
-def test_unauthenticated_upload(unauthenticated_flask_test_client):
-    response = unauthenticated_flask_test_client.get("/")
-    assert response.status_code == 200
-    assert b"Sign in" in response.data
+    assert b"You are uploading for" in response.data
+    assert b"Wigan Metropolitan Borough Council" in response.data
 
 
 def test_upload_xlsx_successful(requests_mock, example_pre_ingest_data_file, flask_test_client):
@@ -94,6 +90,26 @@ def test_upload_xlsx_validation_errors(requests_mock, example_pre_ingest_data_fi
     assert "Start date in an incorrect format. Please enter a dates in the format 'Dec-22'" in str(page_html)
 
 
+def test_upload_ingest_generic_bad_request(requests_mock, example_pre_ingest_data_file, flask_test_client):
+    requests_mock.post(
+        "http://data-store/ingest",
+        content=(
+            b"{"
+            b'    "detail": "Wrong file format",'
+            b'    "status": 400,'
+            b'    "title": "Bad Request",'
+            b'    "type": "about:blank"'
+            b"}"
+        ),
+        status_code=400,
+    )
+    response = flask_test_client.post("/upload", data={"ingest_spreadsheet": example_pre_ingest_data_file})
+    page_html = BeautifulSoup(response.data)
+    assert response.status_code == 500
+    assert "Sorry, there is a problem with the service" in str(page_html)
+    assert "Try again later." in str(page_html)
+
+
 def test_upload_xlsx_uncaught_validation_error(requests_mock, example_pre_ingest_data_file, flask_test_client):
     requests_mock.post(
         "http://data-store/ingest",
@@ -106,8 +122,8 @@ def test_upload_xlsx_uncaught_validation_error(requests_mock, example_pre_ingest
 
     assert response.status_code == 200
     assert (
-        f'Contact us at <a href="mailto:{service_email}">{service_email}</a>. Do not '
-        "send your return or any attachments using the help email."
+        f'Your error code is [XXXX]. Please email us on <a href="mailto:{service_email}">{service_email}</a> and '
+        f"include this error code, so we can investigate this issue and complete your submission"
     ) in str(page_html)
 
 
@@ -115,4 +131,23 @@ def test_upload_wrong_format(flask_test_client, example_ingest_wrong_format):
     response = flask_test_client.post("/upload", data={"ingest_spreadsheet": example_ingest_wrong_format})
     page_html = BeautifulSoup(response.data)
     assert response.status_code == 200
-    assert "Unexpected file format:" in str(page_html)
+    assert "The file selected must be an Excel file" in str(page_html)
+
+
+def test_unauthenticated_upload(unauthenticated_flask_test_client):
+    response = unauthenticated_flask_test_client.get("/")
+    assert response.status_code == 200
+    assert b"Sign in" in response.data
+
+
+def test_unauthorised_user(flask_test_client, mocker):
+    """Tests scenario for an authenticated user that is unauthorized to submit."""
+    # mock unauthorised user
+    mocker.patch(
+        "fsd_utils.authentication.decorators._check_access_token",
+        return_value={"accountId": "test-user", "roles": [], "email": "madeup@madeup.gov.uk"},
+    )
+
+    response = flask_test_client.get("/upload")
+    assert response.status_code == 401
+    assert b"Sorry, you don't currently have permission to access this service" in response.data
