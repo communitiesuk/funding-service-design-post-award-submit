@@ -5,7 +5,8 @@ from werkzeug.exceptions import HTTPException
 
 from app.const import MIMETYPE
 from app.main import bp
-from app.main.data_requests import post_ingest, calculate_days_remaining
+from app.main.data_requests import calculate_days_remaining, post_ingest
+from config import Config
 
 
 @bp.route("/", methods=["GET"])
@@ -21,7 +22,9 @@ def index():
 @login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
 def upload():
     if request.method == "GET":
-        return render_template("upload.html", days_remaining=calculate_days_remaining())
+        return render_template(
+            "upload.html", days_remaining=calculate_days_remaining(), returns_period=Config.RETURNS_PERIOD
+        )
 
     if request.method == "POST":
         excel_file = request.files.get("ingest_spreadsheet")

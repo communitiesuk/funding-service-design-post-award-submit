@@ -1,5 +1,6 @@
+from datetime import datetime
+
 import requests
-from datetime import date
 from flask import abort, current_app
 from requests import Response
 from werkzeug.datastructures import FileStorage
@@ -35,18 +36,14 @@ def post_ingest(file: FileStorage, data: dict = None) -> Response:
 
 
 def calculate_days_remaining():
+    """Calculate the number of days remaining until a specified submission deadline.
+    The due_date parameter is set in main/config/envs/default.py
 
-    #  TODO replace with correct endpoint to fetch due_date
-    request_url = Config.DATA_STORE_API_HOST + "/due-date"
+    :param due_date: str representation of submission deadline in format dd/mm/yyyy
+    Returns:
+    int: The number of days remaining until the submission deadline.
+    """
 
-    response = requests.get(request_url)
-
-    if response.status_code == 200:
-        due_date = response.due_date
-        delta = due_date - date.today()
-        return delta.days
-
-    else:
-        current_app.logger.error(f"Unable to fetch due date: {request_url} returned {response.status_code}")
-        return abort(500)
-
+    due_date = Config.SUBMIT_DEADLINE
+    delta = datetime.strptime(due_date, "%d/%m/%Y").date() - datetime.date(datetime.now())
+    return delta.days
