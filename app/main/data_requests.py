@@ -6,6 +6,7 @@ from requests import Response
 from werkzeug.datastructures import FileStorage
 
 from app.const import MIMETYPE
+from app.main.helpers import get_current_date
 from config import Config
 
 
@@ -45,5 +46,6 @@ def calculate_days_remaining():
     """
 
     due_date = Config.SUBMIT_DEADLINE
-    delta = datetime.strptime(due_date, "%d/%m/%Y").date() - datetime.date(datetime.now())
+    current_date = get_current_date()
+    delta = datetime.strptime(due_date, "%d/%m/%Y").date() - current_date
     return delta.days
