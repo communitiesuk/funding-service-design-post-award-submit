@@ -30,7 +30,7 @@
                     }) }}
 
                     <h2 class="govuk-heading-m">Upload your return for the April to September period</h2>
-                    <p class="govuk-body">You are uploading for <b>[Local Authority name]</b> </p>
+                    <p class="govuk-body">You are uploading for: <b>{% for la in local_authorities %}<li class="govuk-body">{{ la }}</li>{% endfor %}</b> </p>
                     <p class="govuk-body">You need to download the (LINK)[spreadsheet template]   so that you can complete the current return.</p>
                     <br>
                     <br>
@@ -49,7 +49,7 @@
                              'name': 'ingest_spreadsheet'}) }}
                         {% else %}
                             {{ govukFileUpload({'id': 'ingest_spreadsheet',
-                             "hint": {"text": "Upload a CSV file"},
+                             "hint": {"text": "Upload a Excel file"},
                              "label": {"text": ""},
                              "errorMessage": {"text": pre_error[0]},
                              'name': 'ingest_spreadsheet'}) }}

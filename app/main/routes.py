@@ -5,6 +5,7 @@ from werkzeug.exceptions import HTTPException
 
 from app.const import MIMETYPE
 from app.main import bp
+from app.main.authorisation import check_authorised
 from app.main.data_requests import calculate_days_remaining, post_ingest
 from config import Config
 
@@ -21,30 +22,37 @@ def index():
 @bp.route("/upload", methods=["GET", "POST"])
 @login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
 def upload():
+    local_authorities, place_names = check_authorised()
+
     if request.method == "GET":
         return render_template(
-            "upload.html", days_remaining=calculate_days_remaining(), returns_period=Config.RETURNS_PERIOD
+            "upload.html",
+            local_authorities=local_authorities,
+            days_remaining=calculate_days_remaining(),
+            returns_period=Config.RETURNS_PERIOD,
         )
 
     if request.method == "POST":
         excel_file = request.files.get("ingest_spreadsheet")
         file_format = excel_file.content_type
         if file_format != MIMETYPE.XLSX:
-            response = [f"Unexpected file format: {file_format}"]
-            return render_template("upload.html", pre_error=response)
+            error = ["The file selected must be an Excel file"]
+            return render_template("upload.html", pre_error=error)
 
-        # TODO: Update this to round_four when available
-        response = post_ingest(excel_file, {"source_type": "tf_round_three"})
+        ingest_response = post_ingest(excel_file, {"source_type": "tf_round_four", "place_names": place_names})
 
-        match response.status_code:
+        match ingest_response.status_code:
             case 200:
                 return render_template("success.html", file_name=excel_file.filename)
             case 400:
-                response = response.json()
-                if pre_error := response.get("validation_errors").get("PreTransformationErrors"):
-                    return render_template("upload.html", pre_error=pre_error)
-                elif tab_errors := response.get("validation_errors").get("TabErrors"):
-                    return render_template("upload.html", tab_errors=tab_errors)
+                response_json = ingest_response.json()
+                if validation_errors := response_json.get("validation_errors"):
+                    if pre_error := validation_errors.get("PreTransformationErrors"):
+                        return render_template("upload.html", pre_error=pre_error)
+                    elif tab_errors := validation_errors.get("TabErrors"):
+                        return render_template("upload.html", tab_errors=tab_errors)
+                # if json isn't as expected then 500
+                abort(500)
             case 500:
                 return render_template("uncaughtValidation.html", file_name=excel_file.filename)
             case _:
