@@ -6,7 +6,6 @@ from requests import Response
 from werkzeug.datastructures import FileStorage
 
 from app.const import MIMETYPE
-from app.main.helpers import get_current_date
 from config import Config
 
 
@@ -36,16 +35,16 @@ def post_ingest(file: FileStorage, data: dict = None) -> Response:
         return abort(500)
 
 
-def calculate_days_remaining():
+def calculate_days_remaining(current_date=datetime.date(datetime.now())):
     """Calculate the number of days remaining until a specified submission deadline.
-    The due_date parameter is set in main/config/envs/default.py
+    The due_date is a str representation of submission deadline in format dd/mm/yyyy.
+    It is set in main/config/envs/default.py
 
-    :param due_date: str representation of submission deadline in format dd/mm/yyyy
+    :param current_date: datetime object representing today's date without timestamp
     Returns:
     int: The number of days remaining until the submission deadline.
     """
 
     due_date = Config.SUBMIT_DEADLINE
-    current_date = get_current_date()
     delta = datetime.strptime(due_date, "%d/%m/%Y").date() - current_date
     return delta.days
