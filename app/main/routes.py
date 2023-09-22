@@ -6,7 +6,8 @@ from werkzeug.exceptions import HTTPException
 from app.const import MIMETYPE
 from app.main import bp
 from app.main.authorisation import check_authorised
-from app.main.data_requests import calculate_days_remaining, post_ingest
+from app.main.data_requests import post_ingest
+from app.main.utils import calculate_days_to_deadline
 from config import Config
 
 
@@ -28,7 +29,7 @@ def upload():
         return render_template(
             "upload.html",
             local_authorities=local_authorities,
-            days_remaining=calculate_days_remaining(),
+            days_to_deadline=calculate_days_to_deadline(),
             returns_period=Config.RETURNS_PERIOD,
         )
 
