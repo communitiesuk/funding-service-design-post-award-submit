@@ -19,11 +19,19 @@
                 {% if not tab_errors %}
                     <h1 class="govuk-heading-l">Get ready to submit your monitoring and evaluation data return</h1>
 
-                    {% set notificationHTML %}
-                      <p class="govuk-notification-banner__heading">
-                        You have {{ days_to_deadline }} days left to submit your {{ returns_period }} return.
-                      </p>
-                    {% endset %}
+                    {% if days_to_deadline > 0 %}
+                        {% set notificationHTML %}
+                          <p class="govuk-notification-banner__heading">
+                            You have {{ days_to_deadline }} days left to submit your {{ returns_period }} return.
+                          </p>
+                        {% endset %}
+                    {% else %}
+                        {% set notificationHTML %}
+                            <p class="govuk-notification-banner__heading">Your data return is {{ days_to_deadline|abs }} late.</p>
+
+                            <p class="govuk-notification-banner__heading">Submit your return as soon as possible to avoid delays in your funding.</p>
+                        {% endset %}
+                    {% endif %}
 
                     {{ govukNotificationBanner ({
                         "html": notificationHTML
