@@ -38,7 +38,13 @@ def upload():
         file_format = excel_file.content_type
         if file_format != MIMETYPE.XLSX:
             error = ["The file selected must be an Excel file"]
-            return render_template("upload.html", pre_error=error)
+            return render_template(
+                "upload.html",
+                pre_error=error,
+                local_authorities=local_authorities,
+                days_to_deadline=calculate_days_to_deadline(),
+                returns_period=Config.RETURNS_PERIOD,
+            )
 
         ingest_response = post_ingest(excel_file, {"source_type": "tf_round_four", "place_names": place_names})
 
@@ -49,7 +55,13 @@ def upload():
                 response_json = ingest_response.json()
                 if validation_errors := response_json.get("validation_errors"):
                     if pre_error := validation_errors.get("PreTransformationErrors"):
-                        return render_template("upload.html", pre_error=pre_error)
+                        return render_template(
+                            "upload.html",
+                            pre_error=pre_error,
+                            local_authorities=local_authorities,
+                            days_to_deadline=calculate_days_to_deadline(),
+                            returns_period=Config.RETURNS_PERIOD,
+                        )
                     elif tab_errors := validation_errors.get("TabErrors"):
                         return render_template("upload.html", tab_errors=tab_errors)
                 # if json isn't as expected then 500
