@@ -25,16 +25,19 @@
                             You have {{ days_to_deadline }} days left to submit your {{ returns_period }} return.
                           </p>
                         {% endset %}
+
                     {% else %}
                         {% set notificationHTML %}
                             <p class="govuk-notification-banner__heading">Your data return is {{ days_to_deadline|abs }} late.</p>
 
                             <p class="govuk-notification-banner__heading">Submit your return as soon as possible to avoid delays in your funding.</p>
                         {% endset %}
+                        {% set notificationClass %} {{ "overdue-notification-banner" }} {% endset %}
                     {% endif %}
 
                     {{ govukNotificationBanner ({
-                        "html": notificationHTML
+                        "html": notificationHTML,
+                        "classes": notificationClass
                     }) }}
 
                     <h2 class="govuk-heading-m">Upload your return for the April to September period</h2>
