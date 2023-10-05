@@ -46,7 +46,7 @@ def upload():
                 returns_period=Config.RETURNS_PERIOD,
             )
 
-        ingest_response = post_ingest(excel_file, {"source_type": "tf_round_four", "place_names": place_names})
+        ingest_response = post_ingest(excel_file, {"reporting_round": 4, "place_names": place_names})
 
         match ingest_response.status_code:
             case 200:
