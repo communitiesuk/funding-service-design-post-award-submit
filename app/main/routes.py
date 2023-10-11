@@ -8,7 +8,6 @@ from app.main import bp
 from app.main.authorisation import check_authorised
 from app.main.data_requests import post_ingest
 from app.main.utils import calculate_days_to_deadline
-from config import Config
 
 
 @bp.route("/", methods=["GET"])
@@ -30,7 +29,6 @@ def upload():
             "upload.html",
             local_authorities=local_authorities,
             days_to_deadline=calculate_days_to_deadline(),
-            returns_period=Config.RETURNS_PERIOD,
         )
 
     if request.method == "POST":
@@ -43,7 +41,6 @@ def upload():
                 pre_error=error,
                 local_authorities=local_authorities,
                 days_to_deadline=calculate_days_to_deadline(),
-                returns_period=Config.RETURNS_PERIOD,
             )
 
         success, pre_errors, validation_errors = post_ingest(
@@ -59,7 +56,6 @@ def upload():
                 tab_errors=validation_errors,
                 local_authorities=local_authorities,
                 days_to_deadline=calculate_days_to_deadline(),
-                returns_period=Config.RETURNS_PERIOD,
             )
         else:
             return render_template("uncaughtValidation.html", file_name=excel_file.filename)

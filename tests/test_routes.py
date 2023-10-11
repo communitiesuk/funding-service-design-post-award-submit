@@ -14,8 +14,11 @@ def test_index_page(flask_test_client):
 def test_upload_page(flask_test_client):
     response = flask_test_client.get("/upload")
     assert response.status_code == 200
-    assert b"You are uploading for" in response.data
-    assert b"Wigan Metropolitan Borough Council" in response.data
+    assert b"Upload your data return" in response.data
+    assert (
+        b"When you upload your return, we\xe2\x80\x99ll check it for missing data and formatting errors."
+        in response.data
+    )
 
 
 def test_upload_xlsx_successful(requests_mock, example_pre_ingest_data_file, flask_test_client):
@@ -170,7 +173,7 @@ def test_future_deadline_view(flask_test_client):
 
     # The normal banner should be displayed if submission is not overdue
     assert b"overdue-notification-banner" not in response.data
-    assert b"You have 10 days left to submit your April to September 2023 return" in response.data
+    assert b"Your data return is due in 10 days." in response.data
 
 
 def test_overdue_deadline_view(flask_test_client):
