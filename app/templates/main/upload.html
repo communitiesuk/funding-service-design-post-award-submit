@@ -56,6 +56,8 @@
                         "classes": notificationClass
                     }) }}
 
+                    {% set localAuthorities %} {{ ", ".join(local_authorities) if local_authorities|length > 1 else local_authorities[0] }} {% endset %}
+
                     <h1 class="govuk-heading-l">Submit monitoring and evaluation data</h1>
 
                     {{ govukTable({
@@ -74,7 +76,7 @@
                               "text": "Fund"
                             },
                             {
-                              "text": "[Fund name]"
+                              "html": fund
                             }
                           ],
                           [
@@ -82,7 +84,7 @@
                               "text": "Local authority"
                             },
                             {
-                              "text": "[LA name]"
+                              "text": localAuthorities
                             }
                           ],
                           [
@@ -90,7 +92,7 @@
                               "text": "Reporting period"
                             },
                             {
-                              "text": "[period]"
+                              "text": reporting_period
                             }
                           ]
                         ]
