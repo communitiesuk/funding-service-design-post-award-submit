@@ -161,7 +161,7 @@ def test_unauthorised_user(flask_test_client, mocker):
         "fsd_utils.authentication.decorators._check_access_token",
         return_value={
             "accountId": "test-user",
-            "roles": ["TF_MONITORING_RETURN_SUBMITTER"],
+            "roles": [Config.TF_SUBMITTER_ROLE],
             "email": "madeup@madeup.gov.uk",
         },
     )
