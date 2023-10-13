@@ -186,5 +186,34 @@ def test_overdue_deadline_view(flask_test_client):
     # The red version of the banner should be displayed if submission is overdue
     assert b"overdue-notification-banner" in response.data
 
-    assert b"Your data return is 10 late." in response.data
+    assert b"Your data return is 10 days late." in response.data
     assert b"Submit your return as soon as possible to avoid delays in your funding." in response.data
+
+
+def test_single_local_authorities_view(flask_test_client, mocker):
+    # Ensure contents of tuples are displayed correctly on front end
+    mocker.patch("app.main.routes.check_authorised", return_value=(("Council 1",), ("test",)))
+
+    response = flask_test_client.get("/upload")
+
+    assert b"Council 1" in response.data
+    assert b"('Council 1')" not in response.data
+
+
+def test_multiple_local_authorities_view(flask_test_client, mocker):
+    mocker.patch(
+        "app.main.routes.check_authorised",
+        return_value=(
+            (
+                "Council 1",
+                "Council 2",
+                "Council 3",
+            ),
+            ("test",),
+        ),
+    )
+
+    response = flask_test_client.get("/upload")
+
+    assert b"Council 1, Council 2, Council 3" in response.data
+    assert b"('Council 1', 'Council 2', 'Council 3')" not in response.data
