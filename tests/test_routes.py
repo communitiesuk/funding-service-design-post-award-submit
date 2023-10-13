@@ -148,12 +148,22 @@ def test_unauthenticated_upload(unauthenticated_flask_test_client):
     assert b"Sign in" in response.data
 
 
+def test_upload_without_role(unauthenticated_flask_test_client):
+    response = unauthenticated_flask_test_client.get("/")
+    assert response.status_code == 200
+    assert b"Sign in" in response.data
+
+
 def test_unauthorised_user(flask_test_client, mocker):
     """Tests scenario for an authenticated user that is unauthorized to submit."""
     # mock unauthorised user
     mocker.patch(
         "fsd_utils.authentication.decorators._check_access_token",
-        return_value={"accountId": "test-user", "roles": [], "email": "madeup@madeup.gov.uk"},
+        return_value={
+            "accountId": "test-user",
+            "roles": ["TF_MONITORING_RETURN_SUBMITTER"],
+            "email": "madeup@madeup.gov.uk",
+        },
     )
 
     response = flask_test_client.get("/upload")

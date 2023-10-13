@@ -12,7 +12,11 @@ def mocked_auth(mocker):
     # mock authorised user
     mocker.patch(
         "fsd_utils.authentication.decorators._check_access_token",
-        return_value={"accountId": "test-user", "roles": [], "email": "user@wigan.gov.uk"},
+        return_value={
+            "accountId": "test-user",
+            "roles": ["TF_MONITORING_RETURN_SUBMITTER"],
+            "email": "user@wigan.gov.uk",
+        },
     )
 
 
