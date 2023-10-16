@@ -19,35 +19,21 @@
 
                 {% if not tab_errors %}
 
-                    {% if days_to_deadline == 1 %}
-                        {% set notificationHTML %}
-                          <p class="govuk-notification-banner__heading">Your data return is due tomorrow.</p>
-                          <p class="govuk-notification-banner__heading">Submit your return as soon as possible to avoid delays in your funding.</p>
-                        {% endset %}
+                    {% set notificationHTML %}
+                        {% if days_to_deadline == 0 %}
+                            <p class="govuk-notification-banner__heading">Your data return is due today.</p>
+                        {% elif days_to_deadline == 1 %}
+                            <p class="govuk-notification-banner__heading">Your data return is due tomorrow.</p>
+                        {% elif days_to_deadline > 0 %}
+                            <p class="govuk-notification-banner__heading">Your data return is due in {{ days_to_deadline }} days.</p>
+                        {% else %}
+                                <p class="govuk-notification-banner__heading">Your data return is {{ days_to_deadline|abs }} days late.</p>
+                        {% endif %}
+                        <p class="govuk-notification-banner__heading">Submit your return as soon as possible to avoid delays in your funding.</p>
+                    {% endset %}
 
-                    {% elif days_to_deadline == 0 %}
-                        {% set notificationHTML %}
-                          <p class="govuk-notification-banner__heading">Your data return is due today.</p>
-
-                          <p class="govuk-notification-banner__heading">Submit your return as soon as possible to avoid delays in your funding.</p>
-
-                        {% endset %}
-
-                    {% elif days_to_deadline > 0 %}
-                        {% set notificationHTML %}
-                          <p class="govuk-notification-banner__heading">
-                            Your data return is due in {{ days_to_deadline }} days.
-                          </p>
-                          <p class="govuk-notification-banner__heading">Submit your return as soon as possible to avoid delays in your funding.</p>
-
-                        {% endset %}
-
-                    {% else %}
-                        {% set notificationHTML %}
-                            <p class="govuk-notification-banner__heading">Your data return is {{ days_to_deadline|abs }} days late.</p>
-
-                            <p class="govuk-notification-banner__heading">Submit your return as soon as possible to avoid delays in your funding.</p>
-                        {% endset %}
+                    {# override default blue banner with red for overdue deadlines #}
+                    {% if days_to_deadline < 0 %}
                         {% set notificationClass %} {{ "overdue-notification-banner" }} {% endset %}
                     {% endif %}
 
