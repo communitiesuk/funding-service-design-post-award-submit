@@ -74,7 +74,7 @@ def upload():
                 fund=Config.FUND_NAME,
             )
         else:
-            return render_template("uncaughtValidation.html", file_name=excel_file.filename)
+            return render_template("500.html", file_name=excel_file.filename)
 
 
 @bp.app_errorhandler(HTTPException)
