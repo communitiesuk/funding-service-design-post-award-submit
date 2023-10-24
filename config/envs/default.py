@@ -21,6 +21,7 @@ class DefaultConfig(object):
         "DEPARTMENT_URL",
         "https://www.gov.uk/government/organisations/department-for-levelling-up-housing-and-communities",
     )
+    SERVICE_DESK_URL = os.environ.get("SERVICE_DESK_URL", "http://placeholder")
     SERVICE_NAME = os.environ.get("SERVICE_NAME", "Submit monitoring and evaluation data")
     SERVICE_PHASE = os.environ.get("SERVICE_PHASE", "BETA")
     SERVICE_URL = os.environ.get("SERVICE_URL", "dev-service-url")
