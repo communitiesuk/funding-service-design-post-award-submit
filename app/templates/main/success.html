@@ -11,18 +11,47 @@
         <section class="govuk-main-wrapper">
             <div class="govuk-width-container">
 
-                {{ govukPanel({
-                "titleHtml": "Return submitted",
-                "text": file_name
-                }) }}
+                <div class="govuk-panel govuk-panel--confirmation">
+                    <h1 class="govuk-heading-l success-text"> No errors found</h1>
+                      <p class="govuk-!-font-size-48 govuk-!-font-weight-bold">
+                        Return submitted
+                      </p>
+                      <p class="govuk-body govuk-!-font-size-24 success-text">
+                        {{ file_name }}
+                      </p>
+                </div>
 
-                <h2 class="govuk-heading-l">What happens next</h2>
-                <p class="govuk-body">We will only contact you using the email you’ve provided, if we need to:</p>
+                <p class="govuk-body">We’ve sent you a confirmation email.</p>
+                <h2 class="govuk-heading-m">What happens next</h2>
+                <p class="govuk-body">We may email you to:</p>
                 <ul class="govuk-list govuk-list--bullet">
-                    <li>talk to you about your spreadsheet</li>
+                    <li>talk to you about your return</li>
                     <li>ask questions about the data you’ve submitted</li>
                 </ul>
-                <p class="govuk-body">If you need to contact us, you can do so by using this (email) {{ config['CONTACT_EMAIL'] }}.</p>
+                <p class="govuk-body">We’ll do this using the email you’ve provided.</p>
+            </div>
+
+            <div class="govuk-!-margin-top-7">
+               <h2 class="govuk-heading-m">If you need help</h2>
+                <h3 class="govuk-heading-s">Service Desk</h3>
+                    <p class="govuk-body"><a href="#" class="govuk-link">Submit a request for help</a></p>
+                    <p class="govuk-body">We aim to respond within 1 to 2 working days</p>
+                <h3 class="govuk-heading-s">Email</h3>
+                    <p class="govuk-body"><a href="mailto:{{ config['CONTACT_EMAIL'] }}">{{ config['CONTACT_EMAIL'] }}</a></p>
+                    <p class="govuk-body">We aim to respond within 1 to 2 working days</p>
+                    <p class="govuk-body">Do not send your data return or any attachments to this email address.</p>
+            </div>
+
+            <div>
+                <h3 class="govuk-heading-s">Arrange a callback</h3>
+                <p class="govuk-body">Request a callback by emailing <a href="mailto:{{ config['CONTACT_EMAIL'] }}">{{ config['CONTACT_EMAIL'] }}</a></p>
+                <p class="govuk-body">To help us call you back quickly, tell us:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>that this is a callback request in the subject of your email</li>
+                    <li>what you need help with</li>
+                    <li>your phone number</li>
+                    <li>when to call you</li>
+                </ul>
             </div>
         </section>
     </main>
