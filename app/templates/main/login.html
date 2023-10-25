@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{%- from "dropdown.html" import dropdown -%}
+{%- from "help-links-dropdown.html" import helpLinksDropdown -%}
 {%- from 'govuk_frontend_jinja/components/button/macro.html' import govukButton -%}
 
 {% block beforeContent %}
@@ -28,7 +28,7 @@
         </div>
     </section>
 
-    {{ dropdown() }}
+    {{ helpLinksDropdown() }}
 
 </main>
 
