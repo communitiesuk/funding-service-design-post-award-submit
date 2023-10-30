@@ -22,16 +22,20 @@
         {% set row =
         [
         {
-            'text': error["sheet"]
+            'text': error["sheet"],
+            "classes": "govuk-table__header"
         },
         {
-            'text': error["section"]
+            'text': error["section"],
+            "classes": "govuk-body"
         },
         {
-            'text': error["cell_index"]
+            'text': error["cell_index"],
+            "classes": "govuk-body"
         },
         {
-            'text': error["description"]
+            'text': error["description"],
+            "classes": "govuk-body"
         },
         ] %}
         {% set rows = ns.rows.append(row) %}

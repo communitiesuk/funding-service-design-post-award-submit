@@ -93,18 +93,18 @@
                     }) }}
 
                 {% else %}
-                    <h2 class="govuk-heading-m">There are errors in your return</h2>
-                    <p class="govuk-body">The following errors have been found in your return.</p>
+                    <h1 class="govuk-heading-l">There are errors in your return</h1>
+                    <p class="govuk-body">Fix these errors and re-upload your return.</p>
                     {{ errorTable(validation_errors) }}
                     <h2 class="govuk-heading-l">Errors fixed?</h2>
-                    <h3 class="govuk-heading-m">Re-upload your data return</h3>
+                    <label class="govuk-heading-m">Re-upload your data return</label>
                 {% endif %}
 
                 {# djlint:off #}
                 <div class="upload-data-container govuk-!-margin-top-5">
                     <form method="post" action="{{ url_for('main.upload') }}" enctype="multipart/form-data">
                         {% if not validation_errors %}
-                            <h2 class="govuk-heading-m">Upload your data return</h2>
+                            <label class="govuk-heading-m">Upload your data return</label>
                         {% endif %}
                         {% if pre_error %}
                             {# construct html to display errors in bullet point list #}
@@ -127,7 +127,9 @@
                              "label": {"text": ""},
                              'name': 'ingest_spreadsheet'}) }}
                         {% endif %}
-                        <p class="govuk-body">When you upload your return, we’ll check it for missing data and formatting errors.</p>
+                        {% if not validation_errors %}
+                            <p class="govuk-body">When you upload your return, we’ll check it for missing data and formatting errors.</p>
+                        {% endif %}
 
                         {{ govukButton({"element": "button",
                         "text": "Upload and check for errors",
