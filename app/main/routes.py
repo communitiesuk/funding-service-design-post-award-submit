@@ -11,6 +11,8 @@ from app.main.notify import send_confirmation_emails
 from app.utils import calculate_days_to_deadline, is_load_enabled
 from config import Config
 
+logout_url = render_template("login.html")
+
 
 @bp.route("/", methods=["GET"])
 @login_requested
@@ -22,7 +24,9 @@ def index():
 
 
 @bp.route("/upload", methods=["GET", "POST"])
-@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT, roles_required=[Config.TF_SUBMITTER_ROLE])
+@login_required(
+    logout_url=logout_url, return_app=SupportedApp.POST_AWARD_SUBMIT, roles_required=[Config.TF_SUBMITTER_ROLE]
+)
 def upload():
     local_authorities, place_names = check_authorised()
 
