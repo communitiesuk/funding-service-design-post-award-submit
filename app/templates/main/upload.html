@@ -11,15 +11,22 @@
 
 {% block beforeContent %}
 {{ super() }}
+    {% if validation_errors %}
+        <h2 class="govuk-heading-m">There are errors in your return</h2>
+        <p class="govuk-body">The following errors have been found in your return.</p>
+        {{ errorTable(validation_errors) }}
+        <h2 class="govuk-heading-l">Errors fixed?</h2>
+        <h3 class="govuk-heading-m">Re-upload your data return</h3>
+    {% endif %}
 {% endblock beforeContent %}
 
 {% block content %}
 
-    <main id="main-content" role="main">
-        {% if not validation_errors %}
-        <section class="govuk-main-wrapper">
-            <div class="govuk-width-container">
-        {% endif %}
+{#    <main id="main-content" role="main">#}
+{#        {% if not validation_errors %}#}
+{#        <section class="govuk-main-wrapper">#}
+{#            <div class="govuk-width-container">#}
+{#        {% endif %}#}
                 {% if not validation_errors %}
 
                     {# override default banner with error summary for pre validation errors #}
@@ -92,13 +99,13 @@
                         ]
                     }) }}
 
-                {% else %}
-                    <h2 class="govuk-heading-m">There are errors in your return</h2>
-                    <p class="govuk-body">The following errors have been found in your return.</p>
-                    {{ errorTable(validation_errors) }}
-                    <h2 class="govuk-heading-l">Errors fixed?</h2>
-                    <h3 class="govuk-heading-m">Re-upload your data return</h3>
-                {% endif %}
+{#                {% else %}#}
+{#                    <h2 class="govuk-heading-m">There are errors in your return</h2>#}
+{#                    <p class="govuk-body">The following errors have been found in your return.</p>#}
+{#                    {{ errorTable(validation_errors) }}#}
+{#                    <h2 class="govuk-heading-l">Errors fixed?</h2>#}
+{#                    <h3 class="govuk-heading-m">Re-upload your data return</h3>#}
+{#                {% endif %}#}
 
                 {# djlint:off #}
                 <div class="upload-data-container govuk-!-margin-top-5">
@@ -137,11 +144,11 @@
                     </form>
                     {{ helpLinksDropdown() }}
                 </div>
-        {% if not validation_errors %}
-            </div>
+{#        {% if not validation_errors %}#}
+{#            </div>#}
             {# djlint:on #}
-        </section>
+{#        </section>#}
         {% endif %}
-    </main>
+{#    </main>#}
 
 {% endblock content %}

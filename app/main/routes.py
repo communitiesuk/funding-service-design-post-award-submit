@@ -27,6 +27,7 @@ def upload():
     local_authorities, place_names = check_authorised()
 
     if request.method == "GET":
+        # original upload template
         return render_template(
             "upload.html",
             local_authorities=local_authorities,
@@ -41,6 +42,7 @@ def upload():
         if file_format != MIMETYPE.XLSX:
             error = ["The selected file must be an Excel file."]
             current_app.logger.info("Incorrect file format uploaded")
+            # render pre-error template
             return render_template(
                 "upload.html",
                 pre_error=error,
@@ -62,6 +64,7 @@ def upload():
             return render_template("success.html", file_name=excel_file.filename)
         else:
             current_app.logger.info("Validation errors found during upload")
+            # render validation-errors.py template
             return render_template(
                 "upload.html",
                 pre_error=pre_errors,
