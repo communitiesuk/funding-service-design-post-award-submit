@@ -22,7 +22,9 @@ def index():
 
 
 @bp.route("/upload", methods=["GET", "POST"])
-@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT, roles_required=[Config.TF_SUBMITTER_ROLE])
+@login_required(
+    return_app=SupportedApp.POST_AWARD_SUBMIT,
+)  # roles_required=[Config.TF_SUBMITTER_ROLE])
 def upload():
     local_authorities, place_names = check_authorised()
 
@@ -44,10 +46,9 @@ def upload():
             current_app.logger.info("Incorrect file format uploaded")
             # render pre-error template
             return render_template(
-                "upload.html",
+                "pre-errors.html",
                 pre_error=error,
                 local_authorities=local_authorities,
-                days_to_deadline=calculate_days_to_deadline(),
                 reporting_period=Config.REPORTING_PERIOD,
                 fund=Config.FUND_NAME,
             )
