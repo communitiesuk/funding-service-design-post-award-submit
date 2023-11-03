@@ -22,9 +22,7 @@ def index():
 
 
 @bp.route("/upload", methods=["GET", "POST"])
-@login_required(
-    return_app=SupportedApp.POST_AWARD_SUBMIT,
-)  # roles_required=[Config.TF_SUBMITTER_ROLE])
+@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT, roles_required=[Config.TF_SUBMITTER_ROLE])
 def upload():
     local_authorities, place_names = check_authorised()
 
@@ -67,7 +65,7 @@ def upload():
             current_app.logger.info("Validation errors found during upload")
             # render validation-errors.py template
             return render_template(
-                "upload.html",
+                "validation-errors.html",
                 pre_error=pre_errors,
                 validation_errors=validation_errors,
                 local_authorities=local_authorities,

@@ -23,6 +23,8 @@
     {# djlint:off #}
     <div class="upload-data-container govuk-!-margin-top-5">
         <form method="post" action="{{ url_for('main.upload') }}" enctype="multipart/form-data">
+            <h2 class="govuk-heading-m">Upload your data return</h2>
+
             {# construct html to display errors in bullet point list #}
             {% set ns = namespace(pre_error_html = "<div class=\"govuk-error-message\">Some of your data is not what we expect, so we could not run the full checks.
             Fix these problems and re-upload:") %}
