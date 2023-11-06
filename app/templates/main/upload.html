@@ -6,6 +6,7 @@
 {%- from "govuk_frontend_jinja/components/accordion/macro.html" import govukNotificationBanner -%}
 {%- from "govuk_frontend_jinja/components/table/macro.html" import govukTable -%}
 {%- from "errorTable.html" import errorTable -%}
+{%- from "uploadTable.html" import uploadTable -%}
 {%- from "errorSummary.html" import errorSummary -%}
 {%- from "errorSummary.html" import errorMessage -%}
 {%- from "help-links-dropdown.html" import helpLinksDropdown -%}
@@ -44,47 +45,7 @@
         }) }}
     {% endif %}
 
-    {% set localAuthorities %} {{ ", ".join(local_authorities) if local_authorities|length > 1 else local_authorities[0] }} {% endset %}
-
-        <h1 class="govuk-heading-l">Submit monitoring and evaluation data</h1>
-
-        {{ govukTable({
-            "firstCellIsHeader": true,
-            "head": [
-              {
-                "text": ""
-              },
-              {
-                "text": ""
-              }
-            ],
-            "rows": [
-              [
-                {
-                  "text": "Fund"
-                },
-                {
-                  "html": fund
-                }
-              ],
-              [
-                {
-                  "text": "Local authority"
-                },
-                {
-                  "text": localAuthorities
-                }
-              ],
-              [
-                {
-                  "text": "Reporting period"
-                },
-                {
-                  "text": reporting_period
-                }
-              ]
-            ]
-        }) }}
+    {{ uploadTable(local_authorities, fund, reporting_period) }}
 
     <div class="upload-data-container govuk-!-margin-top-5">
         <form method="post" action="{{ url_for('main.upload') }}" enctype="multipart/form-data">
