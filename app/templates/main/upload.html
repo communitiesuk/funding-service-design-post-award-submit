@@ -44,72 +44,72 @@
         }) }}
     {% endif %}
 
-        {% set localAuthorities %} {{ ", ".join(local_authorities) if local_authorities|length > 1 else local_authorities[0] }} {% endset %}
+    {% set localAuthorities %} {{ ", ".join(local_authorities) if local_authorities|length > 1 else local_authorities[0] }} {% endset %}
 
-            <h1 class="govuk-heading-l">Submit monitoring and evaluation data</h1>
+        <h1 class="govuk-heading-l">Submit monitoring and evaluation data</h1>
 
-            {{ govukTable({
-                "firstCellIsHeader": true,
-                "head": [
-                  {
-                    "text": ""
-                  },
-                  {
-                    "text": ""
-                  }
-                ],
-                "rows": [
-                  [
-                    {
-                      "text": "Fund"
-                    },
-                    {
-                      "html": fund
-                    }
-                  ],
-                  [
-                    {
-                      "text": "Local authority"
-                    },
-                    {
-                      "text": localAuthorities
-                    }
-                  ],
-                  [
-                    {
-                      "text": "Reporting period"
-                    },
-                    {
-                      "text": reporting_period
-                    }
-                  ]
-                ]
-            }) }}
+        {{ govukTable({
+            "firstCellIsHeader": true,
+            "head": [
+              {
+                "text": ""
+              },
+              {
+                "text": ""
+              }
+            ],
+            "rows": [
+              [
+                {
+                  "text": "Fund"
+                },
+                {
+                  "html": fund
+                }
+              ],
+              [
+                {
+                  "text": "Local authority"
+                },
+                {
+                  "text": localAuthorities
+                }
+              ],
+              [
+                {
+                  "text": "Reporting period"
+                },
+                {
+                  "text": reporting_period
+                }
+              ]
+            ]
+        }) }}
 
-        <div class="upload-data-container govuk-!-margin-top-5">
-            <form method="post" action="{{ url_for('main.upload') }}" enctype="multipart/form-data">
-                <h2 class="govuk-heading-m">Upload your data return</h2>
-                {% if pre_error %}
-                    {{ govukFileUpload({'id': 'ingest_spreadsheet',
-                     "hint": {"text": ""},
-                     "label": {"text": ""},
-                     "errorMessage": {"html": errorMessage(pre_error)},
-                     'name': 'ingest_spreadsheet'}) }}
-                {% else %}
-                    {{ govukFileUpload({'id': 'ingest_spreadsheet',
-                     "hint": {"text": ""},
-                     "label": {"text": ""},
-                     'name': 'ingest_spreadsheet'}) }}
-                {% endif %}
-                <p class="govuk-body">When you upload your return, we’ll check it for missing data and formatting errors.</p>
+    <div class="upload-data-container govuk-!-margin-top-5">
+        <form method="post" action="{{ url_for('main.upload') }}" enctype="multipart/form-data">
+            <h2 class="govuk-heading-m">Upload your data return</h2>
+            {% if pre_error %}
+                {{ govukFileUpload({'id': 'ingest_spreadsheet',
+                 "hint": {"text": ""},
+                 "label": {"text": ""},
+                 "errorMessage": {"html": errorMessage(pre_error)},
+                 'name': 'ingest_spreadsheet'}) }}
+            {% else %}
+                {{ govukFileUpload({'id': 'ingest_spreadsheet',
+                 "hint": {"text": ""},
+                 "label": {"text": ""},
+                 'name': 'ingest_spreadsheet'}) }}
+            {% endif %}
+            <p class="govuk-body">When you upload your return, we’ll check it for missing data and formatting errors.</p>
 
-            {{ govukButton({"element": "button",
-            "text": "Upload and check for errors",
-            "attributes": {
-                "aria-controls": "example-id",
-                "data-tracking-dimension": 123} }) }}
-            </form>
-            {{ helpLinksDropdown() }}
-        </div>
+        {{ govukButton({"element": "button",
+        "text": "Upload and check for errors",
+        "attributes": {
+            "aria-controls": "example-id",
+            "data-tracking-dimension": 123} }) }}
+        </form>
+        {{ helpLinksDropdown() }}
+    </div>
 
 {% endblock content %}
