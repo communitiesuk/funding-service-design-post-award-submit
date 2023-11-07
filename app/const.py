@@ -42,7 +42,7 @@ EMAIL_DOMAIN_TO_LA_AND_PLACE_NAMES = {
     ),
     "carlisle.gov.uk": (
         ("Cumberland Council",),
-        ("Carlisle City Centre",),
+        ("Workington", "Cleator Moor", "Millom", "Carlisle", "Carlisle City Centre", "Maryport Town Centre"),
     ),
     "darlington.gov.uk": (("Darlington Borough Council",), ("Darlington",)),
     "derby.gov.uk": (("Derby City",), ("Derby City Centre, St Peters Cross",)),
