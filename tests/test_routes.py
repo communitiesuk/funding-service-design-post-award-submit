@@ -152,6 +152,7 @@ def test_unauthenticated_upload(unauthenticated_flask_test_client):
 def test_not_signed_in(unauthenticated_flask_test_client):
     response = unauthenticated_flask_test_client.get("/")
     assert response.status_code == 302
+    assert response.location == "/login"
     assert (
         b'You should be redirected automatically to the target URL: <a href="/login">/login</a>. '
         b"If not, click the link."
