@@ -66,11 +66,11 @@
                         {% endif %}
                         <p class="govuk-body">When you upload your return, we’ll check it for missing data and formatting errors.</p>
 
-                    {{ govukButton({"element": "button",
-                    "text": "Upload and check for errors",
-                    "attributes": {
-                        "aria-controls": "example-id",
-                        "data-tracking-dimension": 123} }) }}
+                    {{ govukButton({
+                        "element": "button",
+                        "text": "Upload and check for errors"})
+                    }}
+
                     </form>
                     {{ helpLinksDropdown() }}
                 </div>
