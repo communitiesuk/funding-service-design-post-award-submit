@@ -36,6 +36,7 @@ EMAIL_DOMAIN_TO_LA_AND_PLACE_NAMES = {
     "durham.gov.uk": (("Durham County Council",), ("Bishop Auckland",)),
     "herefordshire.gov.uk": (("Herefordshire Council",), ("Hereford",)),
     "crawley.gov.uk": (("Crawley Borough Council",), ("Crawley",)),
+    # Cumberland and Carlisle have merged and need identical access, however both domains are still in use
     "cumberland.gov.uk": (
         ("Cumberland Council",),
         ("Workington", "Cleator Moor", "Millom", "Carlisle", "Carlisle City Centre", "Maryport Town Centre"),
