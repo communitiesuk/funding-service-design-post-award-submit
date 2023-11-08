@@ -143,20 +143,13 @@ def test_unauthenticated_upload(unauthenticated_flask_test_client):
     response = unauthenticated_flask_test_client.get("/upload")
     # Assert redirect to /login
     assert response.status_code == 302
-    assert (
-        b'You should be redirected automatically to the target URL: <a href="/login">/login</a>. '
-        b"If not, click the link."
-    ) in response.data
+    assert response.location == "/login"
 
 
 def test_not_signed_in(unauthenticated_flask_test_client):
     response = unauthenticated_flask_test_client.get("/")
     assert response.status_code == 302
     assert response.location == "/login"
-    assert (
-        b'You should be redirected automatically to the target URL: <a href="/login">/login</a>. '
-        b"If not, click the link."
-    ) in response.data
 
 
 def test_unauthorised_user(flask_test_client, mocker):
