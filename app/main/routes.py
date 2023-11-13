@@ -45,8 +45,7 @@ def upload():
         file_format = excel_file.content_type
         if file_format != MIMETYPE.XLSX:
             error = ["The selected file must be an Excel file."]
-            if Config.ENABLE_VALIDATION_LOGGING:
-                current_app.logger.info("Incorrect file format uploaded")
+            current_app.logger.info("Incorrect file format uploaded")
             return render_template(
                 "upload.html",
                 pre_error=error,
@@ -69,6 +68,8 @@ def upload():
         elif pre_errors:
             if Config.ENABLE_VALIDATION_LOGGING:
                 current_app.logger.info(f"Pre-validation error(s) found during upload: {pre_errors}")
+            else:
+                current_app.logger.info("Pre-validation error(s) found during upload")
 
             return render_template(
                 "upload.html",
@@ -79,12 +80,10 @@ def upload():
                 fund=Config.FUND_NAME,
             )
         else:
-            combined_error = {
-                key: [error[key] for error in validation_errors]
-                for key in ["cell_index", "description", "section", "sheet"]
-            }
             if Config.ENABLE_VALIDATION_LOGGING:
-                current_app.logger.info(f"Validation errors found during upload: {combined_error}")
+                current_app.logger.info(f"Validation errors found during upload: {validation_errors}")
+            else:
+                current_app.logger.info("Validation errors found during upload")
             return render_template(
                 "validation-errors.html",
                 validation_errors=validation_errors,
