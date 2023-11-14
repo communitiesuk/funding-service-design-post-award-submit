@@ -67,9 +67,10 @@ def upload():
             return render_template("success.html", file_name=excel_file.filename)
         elif pre_errors:
             if Config.ENABLE_VALIDATION_LOGGING:
-                current_app.logger.info(f"Pre-validation error(s) found during upload: {pre_errors}")
+                for pre_err in pre_errors:
+                    current_app.logger.info(f"Pre-validation error: {pre_err}")
             else:
-                current_app.logger.info("Pre-validation error(s) found during upload")
+                "Pre-validation error(s) found during upload"
 
             return render_template(
                 "upload.html",
@@ -81,9 +82,11 @@ def upload():
             )
         else:
             if Config.ENABLE_VALIDATION_LOGGING:
-                current_app.logger.info(f"Validation errors found during upload: {validation_errors}")
+                for validation_err in validation_errors:
+                    current_app.logger.info(f"Pre-validation error: {validation_err}")
             else:
-                current_app.logger.info("Validation errors found during upload")
+                "Validation error(s) found during upload"
+
             return render_template(
                 "validation-errors.html",
                 validation_errors=validation_errors,
