@@ -69,6 +69,6 @@ jobs:
           yq -i '.variables.FLASK_ENV = "${{ inputs.environment || 'test' }}"' copilot/submit/manifest.yml
           yq -i '.image.location = "ghcr.io/communitiesuk/${{ github.event.repository.name }}:${{ github.ref_name == 'main' && 'latest' || needs.tag_version.outputs.version_to_tag }}"' copilot/submit/manifest.yml
 
-      - name: Copilot deploy
-        run: |
-          copilot svc deploy
+      # - name: Copilot deploy
+      #   run: |
+      #     copilot svc deploy
