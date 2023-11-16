@@ -30,7 +30,7 @@ jobs:
     permissions:
       packages: write
     needs: [ tag_version ]
-    uses: communitiesuk/funding-service-design-workflows/.github/workflows/package.yml@main
+    uses: communitiesuk/funding-service-design-workflows/.github/workflows/package.yml@BAU_add_repo_value
     with:
       assets_required: true
       version_to_build: ${{ needs.tag_version.outputs.version_to_tag }}
