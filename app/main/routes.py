@@ -120,4 +120,9 @@ def check_file(excel_file: FileStorage) -> str | None:
 
 @bp.app_errorhandler(HTTPException)
 def http_exception(error):
-    return render_template(f"{error.code}.html"), error.code
+    error_templates = (401, 404, 429, 500, 503)
+
+    if error.code in error_templates:
+        return render_template(f"{error.code}.html"), error.code
+    else:
+        return render_template("500.html")

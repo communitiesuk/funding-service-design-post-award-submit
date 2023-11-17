@@ -80,12 +80,14 @@ def test_upload_xlsx_validation_errors(requests_mock, example_pre_ingest_data_fi
                     "section": "section1",
                     "cell_index": "A1",
                     "description": "You are missing project locations. Please enter a project location.",
+                    "error_type": "NonNullableConstraintFailure",
                 },
                 {
                     "sheet": "Tab2",
                     "section": "section2",
                     "cell_index": "B2-Y2",
                     "description": "Start date in an incorrect format. Please enter a dates in the format 'Dec-22'",
+                    "error_type": "TownsFundRoundFourValidationFailure",
                 },
             ],
         },
@@ -98,6 +100,15 @@ def test_upload_xlsx_validation_errors(requests_mock, example_pre_ingest_data_fi
     assert "Project admin" in str(page_html)
     assert "You are missing project locations. Please enter a project location." in str(page_html)
     assert "Start date in an incorrect format. Please enter a dates in the format 'Dec-22'" in str(page_html)
+
+    # assert errors display correctly
+    assert '<th class="govuk-table__header" scope="col">Description</th>' in str(page_html)
+    assert '<th class="govuk-table__header" scope="col">Cell</th>' in str(page_html)
+    assert (
+        '<td class="govuk-table__cell">You are missing project locations. Please enter a project location.</td>'
+        in str(page_html)
+    )
+    assert '<td class="govuk-table__cell">Section2</td>' in str(page_html)
 
 
 def test_upload_ingest_generic_bad_request(requests_mock, example_pre_ingest_data_file, flask_test_client):
