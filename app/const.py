@@ -28,6 +28,7 @@ EMAIL_DOMAIN_TO_LA_AND_PLACE_NAMES = {
     "bradford.gov.uk": (("Bradford Council",), ("Shipley", "Keighley")),
     "broxtowe.gov.uk": (("Broxtowe Borough Council",), ("Stapleford",)),
     "buckinghamshire.gov.uk": (("Buckinghamshire Council",), ("High Wycombe",)),
+    "buckscc.gov.uk": (("Buckinghamshire Council",), ("High Wycombe",)),
     "calderdale.gov.uk": (
         ("Calderdale Council",),
         ("Halifax", "Brighouse", "Todmorden", "Elland Town Centre"),
@@ -165,7 +166,7 @@ EMAIL_DOMAIN_TO_LA_AND_PLACE_NAMES = {
         ),
     ),
     "norwich.gov.uk": (("Norwich City Council",), ("Norwich",)),
-    "nottinghamcity.gov.uk": (("Nottingham City Council",), ("Nottingham City Centre, West End Point",)),
+    "nottinghamcity.gov.uk": (("Nottingham City Council",), ("Nottingham City Centre - West End Point",)),
     "nuneatonandbedworth.gov.uk": (
         ("Nuneaton & Bedworth Borough Council",),
         (
