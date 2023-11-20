@@ -125,4 +125,6 @@ def http_exception(error):
     if error.code in error_templates:
         return render_template(f"{error.code}.html"), error.code
     else:
+        if Config.ENABLE_VALIDATION_LOGGING:
+            current_app.logger.info(f"Unhandled HTTP error {error.code} found.")
         return render_template("500.html")

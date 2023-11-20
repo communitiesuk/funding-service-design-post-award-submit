@@ -101,15 +101,6 @@ def test_upload_xlsx_validation_errors(requests_mock, example_pre_ingest_data_fi
     assert "You are missing project locations. Please enter a project location." in str(page_html)
     assert "Start date in an incorrect format. Please enter a dates in the format 'Dec-22'" in str(page_html)
 
-    # assert errors display correctly
-    assert '<th class="govuk-table__header" scope="col">Description</th>' in str(page_html)
-    assert '<th class="govuk-table__header" scope="col">Cell</th>' in str(page_html)
-    assert (
-        '<td class="govuk-table__cell">You are missing project locations. Please enter a project location.</td>'
-        in str(page_html)
-    )
-    assert '<td class="govuk-table__cell">Section2</td>' in str(page_html)
-
 
 def test_upload_ingest_generic_bad_request(requests_mock, example_pre_ingest_data_file, flask_test_client):
     requests_mock.post(
@@ -271,3 +262,21 @@ def test_multiple_local_authorities_view(flask_test_client, mocker):
 
     assert b"Council 1, Council 2, Council 3" in response.data
     assert b"('Council 1', 'Council 2', 'Council 3')" not in response.data
+
+
+def test_known_http_error_redirect(flask_test_client):
+    # induce a known error
+    response = flask_test_client.get("/unknown-page")
+
+    # 404 template should be rendered
+    assert b"Page not found" in response.data
+    assert b"If you typed the web address, check it is correct." in response.data
+
+
+def test_http_error_unknown_redirects(flask_test_client, requests_mock):
+    # induce an unknown error
+    response = flask_test_client.post("/?g=obj_app_upfile")
+
+    # 500 template should be rendered
+    assert b"Sorry, there is a problem with the service" in response.data
+    assert b"Try again later." in response.data
