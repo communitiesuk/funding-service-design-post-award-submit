@@ -268,15 +268,17 @@ def test_known_http_error_redirect(flask_test_client):
     # induce a known error
     response = flask_test_client.get("/unknown-page")
 
-    # 404 template should be rendered
+    assert response.status_code == 404
+    # 404.html template should be rendered
     assert b"Page not found" in response.data
     assert b"If you typed the web address, check it is correct." in response.data
 
 
-def test_http_error_unknown_redirects(flask_test_client, requests_mock):
-    # induce an unknown error
+def test_http_error_unknown_redirects(flask_test_client):
+    # induce a 405 error
     response = flask_test_client.post("/?g=obj_app_upfile")
 
-    # 500 template should be rendered
+    assert response.status_code == 405
+    # generic error template should be rendered
     assert b"Sorry, there is a problem with the service" in response.data
     assert b"Try again later." in response.data
