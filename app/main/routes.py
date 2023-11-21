@@ -127,7 +127,7 @@ def http_exception(error):
     :param error: object containing attributes related to the error
     :return: HTML template describing user-facing error, and error code
     """
-    error_templates = (401, 404, 429, 500, 503)
+    error_templates = [401, 404, 429, 500, 503]
 
     if error.code in error_templates:
         return render_template(f"{error.code}.html"), error.code
