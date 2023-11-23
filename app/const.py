@@ -31,6 +31,7 @@ EMAIL_DOMAIN_TO_LA_AND_PLACE_NAMES = {
     "cheshireeast.gov.uk": (("Cheshire East Council",), ("Crewe",)),
     "cheshirewestandchester.gov.uk": (("Cheshire West and Chester Council",), ("Winsford",)),
     "chesterfield.gov.uk": (("Chesterfield Borough Council",), ("Staveley",)),
+    "cannockchasedc.gov.uk": (("Ashfield District Council",), ("Sutton in Ashfield", "Kirkby and Sutton (Ashfield)")),
     "colchester.gov.uk": (("Colchester City Council",), ("Colchester",)),
     "cornwall.gov.uk": (("Cornwall Council",), ("Truro", "Camborne", "Penzance", "St Ives")),
     "durham.gov.uk": (("Durham County Council",), ("Bishop Auckland",)),
