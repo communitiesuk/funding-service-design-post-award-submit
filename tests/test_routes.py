@@ -1,8 +1,8 @@
-from datetime import datetime, timedelta
+from copy import copy
 
 from bs4 import BeautifulSoup
 
-from config import Config
+from app.main.fund import TOWNS_FUND_APP_CONFIG, ReadOnlyFundConfigs
 
 
 def test_index_page(flask_test_client):
@@ -168,9 +168,27 @@ def test_unauthorised_user(flask_test_client, mocker):
         "fsd_utils.authentication.decorators._check_access_token",
         return_value={
             "accountId": "test-user",
-            "roles": [Config.TF_SUBMITTER_ROLE],
+            "roles": [TOWNS_FUND_APP_CONFIG.user_role],
             "email": "madeup@madeup.gov.uk",
         },
+    )
+
+    response = flask_test_client.get("/upload")
+    assert response.status_code == 401
+    assert b"Sorry, you don't currently have permission to access this service" in response.data
+
+
+def test_inactive_fund(flask_test_client, mocker):
+    """
+    GIVEN a user is accessing /upload
+    WHEN the fund they are permitted to submit for is inactive
+    THEN the user should be redirected to the 401 unauthorised error page
+    """
+    # set tf fund config to be inactive
+    modified_tf_fund_config = copy(TOWNS_FUND_APP_CONFIG)
+    modified_tf_fund_config.active = False
+    flask_test_client.application.config["FUND_CONFIGS"] = ReadOnlyFundConfigs(
+        {modified_tf_fund_config.user_role: modified_tf_fund_config}
     )
 
     response = flask_test_client.get("/upload")
@@ -247,7 +265,7 @@ def test_multiple_local_authorities_view(flask_test_client, mocker):
         "fsd_utils.authentication.decorators._check_access_token",
         return_value={
             "accountId": "test-user",
-            "roles": [Config.TF_SUBMITTER_ROLE],
+            "roles": [TOWNS_FUND_APP_CONFIG.user_role],
             # in config.unit_test.py this email is set to map to the below councils
             "email": "multiple_orgs@contractor.com",
         },
