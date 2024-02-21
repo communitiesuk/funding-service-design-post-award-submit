@@ -172,7 +172,7 @@ urllib3==1.26.18
     #   sentry-sdk
 webassets==2.0
     # via flask-assets
-werkzeug==2.3.6
+werkzeug==2.3.8
     # via flask
 
 # The following packages are considered to be unsafe in a requirements file:
