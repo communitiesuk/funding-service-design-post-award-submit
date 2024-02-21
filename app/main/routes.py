@@ -16,7 +16,7 @@ from app.const import (
 )
 from app.main import bp
 from app.main.data_requests import post_ingest
-from app.main.decorators import auth_required
+from app.main.decorators import check_user_can_submit_in_window
 from app.main.notify import send_confirmation_emails
 from app.utils import days_between_dates, is_load_enabled
 from config import Config
@@ -38,14 +38,28 @@ def login():
 
 @bp.route("/upload", methods=["GET", "POST"])
 @login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
-@auth_required
-def upload():
+def base_upload():
+    funds = current_app.config["FUND_CONFIGS"].get_funds_by_roles(g.user.roles)
+    default_fund = funds[0]  # arbitrary selection of a fund in absense of a page to select one from
+    if len(funds) > 1:
+        current_app.logger.error(
+            f"User: {g.user.email} can Submit for multiple active funds {[fund.fund_name for fund in funds]}, "
+            f"defaulting to {default_fund.fund_name}"
+        )
+    return redirect(url_for("main.upload", window_id=default_fund.window_id))
+
+
+@bp.route("/upload/<window_id>", methods=["GET", "POST"])
+@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
+@check_user_can_submit_in_window
+def upload(window_id):
     if request.method == "GET":
         return render_template(
             "upload.html",
             days_to_deadline=days_between_dates(datetime.now().date(), g.fund.current_deadline),
             reporting_period=g.fund.current_reporting_period,
             fund=g.fund.fund_name,
+            window_id=window_id,
         )
 
     if request.method == "POST":
@@ -78,6 +92,7 @@ def upload():
                 days_to_deadline=days_between_dates(datetime.now().date(), g.fund.current_deadline),
                 reporting_period=g.fund.current_reporting_period,
                 fund=g.fund.fund_name,
+                window_id=window_id,
             )
         elif validation_errors:
             # Validation failure
@@ -136,9 +151,8 @@ def http_exception(error):
     :return: HTML template describing user-facing error, and error code
     """
     error_templates = [401, 404, 429, 500, 503]
-
     if error.code in error_templates:
         return render_template(f"{error.code}.html"), error.code
     else:
-        current_app.logger.info(f"Unhandled HTTP error {error.code} found.")
+        current_app.logger.info(f"Unhandled HTTP error {error.code} found with error {error}.")
         return render_template("500.html"), error.code

@@ -18,6 +18,8 @@ class FundConfig:
     This injects fund specific context into the rest of the application.
     """
 
+    window_id = "TF_R4"
+
     def __init__(
         self,
         fund_name: str,
@@ -72,21 +74,15 @@ class FundConfig:
 class FundService:
     """Stores and exposes Fund information. Given a user's roles, will return the associated Fund information."""
 
-    def __init__(self, role_to_fund_configs: dict[str, FundConfig]):
-        self._fund_configs = role_to_fund_configs
+    def __init__(self, fund_configs: list[FundConfig]):
+        self._fund_configs = fund_configs
 
-    def get_active_funds(self, roles: list[str]):
-        """Retrieves the active fund configuration data associated with a user role.
+    def get_fund_by_window_id(self, window_id: str) -> FundConfig:
+        # TODO: do we need to be robust to fund configs having the same window id?
+        return next(fund for fund in self._fund_configs if fund.window_id == window_id and fund.active)
 
-        :param roles: The user roles.
-        :return: The configurations corresponding to the given roles.
-        :raises ValueError: If the given role is not found in the application configurations.
-        """
-        funds = [
-            self._fund_configs[role]
-            for role in roles
-            if self._fund_configs.get(role) and self._fund_configs[role].active
-        ]
+    def get_funds_by_roles(self, roles: list[str]) -> list[FundConfig]:
+        funds = [fund for fund in self._fund_configs for role in roles if fund.user_role == role and fund.active]
         return funds
 
 

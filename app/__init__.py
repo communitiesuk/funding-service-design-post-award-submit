@@ -84,7 +84,7 @@ def setup_funds_and_auth(app: Flask) -> None:
 
     # funds
     towns_fund: FundConfig = TOWNS_FUND_APP_CONFIG
-    app.config["FUND_CONFIGS"] = FundService(role_to_fund_configs={towns_fund.user_role: towns_fund})
+    app.config["FUND_CONFIGS"] = FundService(fund_configs=[towns_fund])
 
     # auth
     tf_auth = TOWNS_FUND_AUTH

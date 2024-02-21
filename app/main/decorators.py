@@ -1,12 +1,12 @@
 from functools import wraps
 
-from flask import abort, current_app, g
+from flask import abort, current_app, g, request
 
 from app.main.authorisation import AuthBase, AuthMapping
 from app.main.fund import FundConfig
 
 
-def auth_required(func):
+def check_user_can_submit_in_window(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
         """Checks that the user is authorised to submit.
@@ -27,19 +27,12 @@ def auth_required(func):
 
         :raises 401 Unauthorized: If the user has an invalid role(s) or no auth.
         """
-        funds: list[FundConfig] = current_app.config["FUND_CONFIGS"].get_active_funds(g.user.roles)
+        window_id = request.view_args["window_id"]
+        fund: FundConfig = current_app.config["FUND_CONFIGS"].get_fund_by_window_id(window_id)
 
-        if not funds:
-            current_app.logger.info(f"User: {g.user.email} is not linked with any active funds.")
-            # TODO: Replace with a more suitable error screen than unauthorised
+        if not fund:
+            current_app.logger.info(f"Invalid request to path {request.path}")
             abort(401)
-        elif len(funds) > 1:
-            current_app.logger.error(
-                f"User: {g.user.email} can Submit for multiple active funds, {[fund.fund_name for fund in funds]}"
-            )
-            abort(401)
-
-        fund = funds[0]  # we currently only support a user submitting for a single active fund
 
         auth_mapping: AuthMapping = current_app.config["AUTH_MAPPINGS"].get_auth(fund.fund_name)
         auth: AuthBase = auth_mapping.get_auth(g.user.email)
