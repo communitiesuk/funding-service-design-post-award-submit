@@ -1,3 +1,5 @@
+import os
+
 from fsd_utils import configclass
 
 from config.envs.default import DefaultConfig
@@ -43,10 +45,12 @@ class DevelopmentConfig(DefaultConfig):
     SEND_CONFIRMATION_EMAILS = True if DefaultConfig.NOTIFY_API_KEY else False
     AUTO_BUILD_ASSETS = True
 
+    DEBUG_USER_ROLE = os.environ.get("DEBUG_USER_ROLE", "PF_MONITORING_RETURN_SUBMITTER")
+
     DEBUG_USER_ON = True
     DEBUG_USER = {
         "full_name": "Development User",
         "email": "dev@communities.gov.uk",
-        "roles": ["TF_MONITORING_RETURN_SUBMITTER", "PF_MONITORING_RETURN_SUBMITTER"],
+        "roles": [DEBUG_USER_ROLE],
         "highest_role_map": {},
     }
