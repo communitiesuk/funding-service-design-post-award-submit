@@ -24,11 +24,12 @@ from config import Config
 
 @bp.route("/", methods=["GET"])
 @login_requested
+@set_user_access
 def index():
     if not g.is_authenticated:
         return redirect(url_for("main.login"))
     else:
-        return redirect(url_for("main.select_fund"))
+        return render_template("select-fund.html", authorised_funds=g.access.items())
 
 
 @bp.route("/login", methods=["GET"])

@@ -18,6 +18,8 @@ class Access:
 def set_user_access(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):
+        if not g.is_authenticated:
+            return func(*args, **kwargs)
         available_funds = current_app.config["FUND_CONFIGS"].get_active_funds(g.user.roles)
         access = {}
         for fund in available_funds:
