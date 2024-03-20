@@ -19,7 +19,7 @@ beautifulsoup4==4.12.2
     #   -r requirements.txt
     #   bs4
     #   funding-service-design-utils
-black==22.12.0
+black==24.3.0
     # via -r requirements-dev.in
 blinker==1.6.2
     # via
@@ -68,9 +68,7 @@ commonmark==0.9.1
     #   -r requirements.txt
     #   rich
 coverage[toml]==7.2.7
-    # via
-    #   coverage
-    #   pytest-cov
+    # via pytest-cov
 cryptography==42.0.2
     # via
     #   -r requirements.txt
@@ -178,6 +176,7 @@ notifications-python-client==8.1.0
     # via -r requirements.txt
 packaging==23.1
     # via
+    #   black
     #   build
     #   pytest
 pathspec==0.11.2
@@ -213,7 +212,6 @@ pyjwt[crypto]==2.8.0
     #   -r requirements.txt
     #   funding-service-design-utils
     #   notifications-python-client
-    #   pyjwt
 pyproject-hooks==1.0.0
     # via build
 pytest==7.4.0
@@ -279,7 +277,6 @@ sentry-sdk[flask]==1.29.2
     # via
     #   -r requirements.txt
     #   funding-service-design-utils
-    #   sentry-sdk
 six==1.16.0
     # via
     #   -r requirements.txt
