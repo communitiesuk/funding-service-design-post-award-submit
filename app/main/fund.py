@@ -111,7 +111,7 @@ PATHFINDERS_APP_CONFIG = FundConfig(
     user_role="PF_MONITORING_RETURN_SUBMITTER",
     current_reporting_period="January to March 2024",
     current_reporting_round=1,
-    current_deadline=datetime.date(day=1, month=12, year=2024),  # TODO replace with accurate value
+    current_deadline=datetime.date(day=30, month=4, year=2024),
     email=Config.PF_CONFIRMATION_EMAIL_ADDRESS,
     active=True,
     auth_class=PFAuth,
