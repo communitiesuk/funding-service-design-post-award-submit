@@ -99,7 +99,6 @@ TOWNS_FUND_APP_CONFIG = FundConfig(
     current_reporting_period="April to September 2023",
     current_reporting_round=4,
     current_deadline=datetime.date(day=4, month=12, year=2023),
-    # TODO: retrieval of email from secret is currently TF specific, modify to be more extendable
     email=Config.TF_CONFIRMATION_EMAIL_ADDRESS,
     active=True,
     auth_class=TFAuth,
@@ -109,9 +108,9 @@ TOWNS_FUND_APP_CONFIG = FundConfig(
 PATHFINDERS_APP_CONFIG = FundConfig(
     fund_name="Pathfinders",
     user_role="PF_MONITORING_RETURN_SUBMITTER",
-    current_reporting_period="October to December 2024",
+    current_reporting_period="January to March 2024",
     current_reporting_round=1,
-    current_deadline=datetime.date(day=1, month=12, year=2024),  # TODO replace with accurate value
+    current_deadline=datetime.date(day=30, month=4, year=2024),
     email=Config.PF_CONFIRMATION_EMAIL_ADDRESS,
     active=True,
     auth_class=PFAuth,
