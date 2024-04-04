@@ -2,20 +2,26 @@ import argparse
 import io
 import os
 
+from notifications_python_client import prepare_upload
 from notifications_python_client.notifications import NotificationsAPIClient
 
-from app.main.notify import prepare_upload
+
+def main(args):
+    with open(args.email_file, "r") as f:
+        for email in f:
+            print(email.strip())
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Send commissioning email for Pathfinders (via Notify)")
-
     parser.add_argument(
         "-e",
         "--email-file",
-        dest="environment",
+        dest="email_file",
         default="emails.txt",
         help="Path to file containing line separated list of users to email",
     )
+    main(parser.parse_args())
 
 
 def send_notify(
