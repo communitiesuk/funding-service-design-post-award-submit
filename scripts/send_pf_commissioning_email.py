@@ -8,8 +8,8 @@ from notifications_python_client.notifications import NotificationsAPIClient
 
 def main(args):
     with open(args.email_file, "r") as f:
-        for email in f:
-            print(email.strip())
+        emails = [line.strip() for line in f.readlines()]
+        print(emails)
 
 
 if __name__ == "__main__":
