@@ -54,6 +54,22 @@ def test_select_fund_page_with_tf_and_pf_roles(flask_test_client, mocked_pf_and_
     )
 
 
+def test_inactive_fund_not_accessible_on_dashboard(flask_test_client, mocked_pf_and_tf_auth, monkeypatch):
+    monkeypatch.setattr(TOWNS_FUND_APP_CONFIG, "active", False)
+    response = flask_test_client.get("/dashboard")
+    page_html = BeautifulSoup(response.data)
+    assert response.status_code == 200
+    assert "Towns Fund" not in str(page_html)
+
+
+def test_inactive_fund_not_accessible_on_route(flask_test_client, mocked_pf_and_tf_auth, monkeypatch):
+    monkeypatch.setattr(TOWNS_FUND_APP_CONFIG, "active", False)
+    response = flask_test_client.get(
+        f"/upload/{TOWNS_FUND_APP_CONFIG.fund_code}/{TOWNS_FUND_APP_CONFIG.current_reporting_round}"
+    )
+    assert response.status_code == 401
+
+
 def test_towns_fund_role(flask_test_client, mocked_auth, monkeypatch):
     monkeypatch.setattr(TOWNS_FUND_APP_CONFIG, "active", True)
     response = flask_test_client.get(f"/upload/{TEST_FUND_CODE}/{TEST_ROUND}")
