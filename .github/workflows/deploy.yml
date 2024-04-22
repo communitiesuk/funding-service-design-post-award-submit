@@ -69,4 +69,4 @@ jobs:
 
       - name: Copilot deploy
         run: |
-          copilot svc deploy
+          copilot svc deploy --force
