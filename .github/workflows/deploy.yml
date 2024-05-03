@@ -70,3 +70,7 @@ jobs:
       - name: Copilot deploy
         run: |
           copilot svc deploy
+      - name: Add deployment tag
+        uses: EndBug/latest-tag@v1.6.2
+        with:
+          ref: ${{ inputs.environment }}
