@@ -16,6 +16,9 @@ jobs:
     timeout-minutes: 30
     environment: ${{ inputs.environment || 'dev' }}
     steps:
+    - name: Git clone the repository
+      uses: actions/checkout@v3
+
     - name: install dependencies
       run: python -m pip install --upgrade pip && pip install -r requirements.txt
 
