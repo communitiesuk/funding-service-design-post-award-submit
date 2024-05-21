@@ -4,7 +4,7 @@ services:
     build:
       args:
         REQUIREMENTS: requirements-dev.txt
-    command: bash -c flask run -p 8080 -h 0.0.0.0
+    command: bash -c "flask run -p 8080 -h 0.0.0.0"
     volumes: [ '.:/app' ]
     ports:
       - 80:8080
