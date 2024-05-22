@@ -20,6 +20,12 @@ services:
     environment:
       - FLASK_ENV=development
       - DATABASE_URL=postgresql://postgres:password@database:5432/postgres
+      - AWS_REGION=eu-central-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_ENDPOINT_OVERRIDE=http://localstack:4566/
+      - AWS_S3_BUCKET_FAILED_FILES=data-store-failed-files-dev
+      - AWS_S3_BUCKET_SUCCESSFUL_FILES=data-store-successful-files-dev
     entrypoint: launcher
     command: bash -c "flask db upgrade && gunicorn wsgi:app -c run/gunicorn/run.py --workers=1"
     depends_on:
