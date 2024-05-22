@@ -21,7 +21,7 @@ services:
       - FLASK_ENV=development
       - DATABASE_URL=postgresql://postgres:password@database:5432/postgres
     entrypoint: launcher
-    command: flask db upgrade && gunicorn wsgi:app -c run/gunicorn/run.py --workers=1
+    command: bash -c "flask db upgrade && gunicorn wsgi:app -c run/gunicorn/run.py --workers=1"
     depends_on:
       - database
       - localstack
