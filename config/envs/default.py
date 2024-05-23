@@ -23,7 +23,7 @@ class DefaultConfig(object):
     SERVICE_DESK_URL = os.environ.get(
         "SERVICE_DESK_URL", "https://dluhcdigital.atlassian.net/servicedesk/customer/portal/5/group/10/create/172"
     )
-    SERVICE_NAME = os.environ.get("SERVICE_NAME", "Submit monitoring and evaluation data")
+    SERVICE_NAME = os.environ.get("SERVICE_NAME", "Gideon in here")
     SERVICE_PHASE = os.environ.get("SERVICE_PHASE", "BETA")
     SERVICE_URL = os.environ.get("SERVICE_URL", "dev-service-url")
     SESSION_COOKIE_SECURE = True
