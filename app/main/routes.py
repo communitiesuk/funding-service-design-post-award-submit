@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+import requests
 from flask import current_app, g, redirect, render_template, request, url_for
 from fsd_utils.authentication.config import SupportedApp
 from fsd_utils.authentication.decorators import login_requested, login_required
@@ -165,3 +166,40 @@ def http_exception(error):
     else:
         current_app.logger.info("Unhandled HTTP error {error_code} found.", extra=dict(error_code=error.code))
         return render_template("500.html"), error.code
+
+@bp.route("/tasklist/<fund_name>", methods=["GET"])
+@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
+@set_user_access
+def tasklist(fund_name: str):
+    tasks_by_fund = {
+        "Pathfinders": [
+            {
+                "title": "Admin",
+                "href": "http://localhost:4003/run-form/admin-rfp"
+            }
+        ]
+    }
+    return render_template("tasklist.html", tasks=tasks_by_fund[fund_name])
+
+@bp.route("/run-form/<form_name>", methods=["GET"])
+@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
+@set_user_access
+def run_form(form_name: str):
+    rehydrate_payload = {
+        "options": {
+            "callbackUrl": f"http://data-store:8080/upload?task={form_name}",
+            "returnUrl": "http://localhost:4003/tasklist/Pathfinders",
+        },
+        "questions": [],
+        "metadata": {
+            "form_name": form_name,
+        }
+    }
+    rehydrate_token_url = "http://form-runner:3009/session/" + form_name
+    rehydrate_token_response = requests.post(
+        rehydrate_token_url,
+        json=rehydrate_payload,
+        timeout=10
+    )
+    rehydrate_token = rehydrate_token_response.json()["token"]
+    return redirect("http://localhost:3009/session/" + rehydrate_token)

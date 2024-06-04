@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block pageTitle %}Tasklist{% endblock pageTitle %}
+
+{% set mainClasses = "govuk-main-wrapper--l" %}
+
+{% block content %}
+    {% for task in tasks %}
+        <div class="task">
+            <h3>{{ task.title }}</h3>
+            <a href="{{ task.href }}" class="btn btn-primary">Start</a>
+        </div>
+    {% endfor %}
+{% endblock content %}
