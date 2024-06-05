@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block pageTitle %}Report for {{ fund_name }}{% endblock pageTitle %}
+
+{% set mainClasses = "govuk-main-wrapper--l" %}
+
+{% block content %}
+    <a href="/report/{{ fund_name }}/new">Create new report</a>
+    <h2>Existing reports</h2>
+    {% for pending_submission in pending_submissions %}
+        <div class="pending-submission">
+            <h4>{{ pending_submission.id }}</h4>
+            <a href="/tasklist/{{ fund_name }}/{{ pending_submission.id }}" class="btn btn-primary">Continue</a>
+        </div>
+    {% endfor %}
+{% endblock content %}

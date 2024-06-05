@@ -167,30 +167,102 @@ def http_exception(error):
         current_app.logger.info("Unhandled HTTP error {error_code} found.", extra=dict(error_code=error.code))
         return render_template("500.html"), error.code
 
-@bp.route("/tasklist/<fund_name>", methods=["GET"])
+
+@bp.route("/new-dashboard", methods=["GET"])
 @login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
 @set_user_access
-def tasklist(fund_name: str):
+def new_dashboard():
+    return render_template("new-dashboard.html", authorised_funds=g.access.items())
+
+
+def get_all_pending_submissions(fund_name: str, organisation_name: str) -> list:
+    PENDING_SUBMISSION_URL = "http://data-store:8080/pending-submission"
+    resp = requests.get(
+        PENDING_SUBMISSION_URL,
+        params={"fund_name": fund_name, "organisation_name": organisation_name},
+        timeout=10,
+    )
+    return resp.json()["pending_submissions"]
+
+
+@bp.route("/report/<fund_name>", methods=["GET"])
+@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
+@set_user_access
+def report_fund(fund_name):
+    organisation_name = "Test"
+    pending_submissions = get_all_pending_submissions(fund_name=fund_name, organisation_name=organisation_name)
+    return render_template("report_fund.html", fund_name=fund_name, pending_submissions=pending_submissions)
+
+
+def create_pending_submission(fund_name: str, organisation_name: str) -> str:
+    PENDING_SUBMISSION_URL = "http://data-store:8080/pending-submission"
+    resp = requests.post(
+        PENDING_SUBMISSION_URL,
+        json={"fund_name": fund_name, "organisation_name": organisation_name},
+        timeout=10,
+    )
+    return resp.json()["pending_submission_id"]
+
+
+@bp.route("/report/<fund_name>/new", methods=["GET"])
+@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
+@set_user_access
+def new_report(fund_name):
+    organisation_name = "Test"
+    pending_submission_id = create_pending_submission(fund_name=fund_name, organisation_name=organisation_name)
+    return redirect(f"http://localhost:4003/tasklist/{fund_name}/{pending_submission_id}")
+
+
+@bp.route("/tasklist/<fund_name>/<pending_submission_id>", methods=["GET"])
+@login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
+@set_user_access
+def tasklist(fund_name: str, pending_submission_id: str):
+    RUN_FORM_URL = "http://localhost:4003/run-form"
     tasks_by_fund = {
-        "Pathfinders": [
+        "PF": [
             {
                 "title": "Admin",
-                "href": "http://localhost:4003/run-form/admin-rfp"
-            }
-        ]
+                "href": f"{RUN_FORM_URL}/{pending_submission_id}/admin-rfp",
+            },
+            {
+                "title": "Spreadsheet upload",
+                "href": f"{RUN_FORM_URL}/{pending_submission_id}/spreadsheet-upload-rfp"
+            },
+        ],
     }
-    return render_template("tasklist.html", tasks=tasks_by_fund[fund_name])
+    return render_template("tasklist.html", fund_name=fund_name, tasks=tasks_by_fund[fund_name])
 
-@bp.route("/run-form/<form_name>", methods=["GET"])
+
+def get_pending_submission(pending_submission_id: str) -> dict:
+    PENDING_SUBMISSION_URL = "http://data-store:8080/pending-submission"
+    resp = requests.get(
+        f"{PENDING_SUBMISSION_URL}/{pending_submission_id}",
+        timeout=10,
+    )
+    return resp.json()["pending_submission"]
+
+
+def get_questions(pending_submission: dict, form_name: str) -> list:
+    forms = [form for form in pending_submission["forms"] if form["form_name"] == form_name]
+    latest_form = forms[-1] if forms else None
+    if not latest_form:
+        return []
+    return latest_form["data"]["questions"]
+
+
+@bp.route("/run-form/<pending_submission_id>/<form_name>", methods=["GET"])
 @login_required(return_app=SupportedApp.POST_AWARD_SUBMIT)
 @set_user_access
-def run_form(form_name: str):
+def run_form(pending_submission_id: str, form_name: str):
+    pending_submission = get_pending_submission(pending_submission_id)
+    questions = get_questions(pending_submission, form_name)
+    fund_name = pending_submission["fund_name"]
     rehydrate_payload = {
         "options": {
-            "callbackUrl": f"http://data-store:8080/upload?task={form_name}",
-            "returnUrl": "http://localhost:4003/tasklist/Pathfinders",
+            "callbackUrl": f"http://data-store:8080/upload?pending_submission_id={pending_submission_id}",
+            "returnUrl": f"http://localhost:4003/tasklist/{fund_name}/{pending_submission_id}",
         },
-        "questions": [],
+        "questions": questions,
         "metadata": {
             "form_name": form_name,
         }

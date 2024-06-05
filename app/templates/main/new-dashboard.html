@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block pageTitle %}New dashboard{% endblock pageTitle %}
+
+{% set mainClasses = "govuk-main-wrapper--l" %}
+
+{% block content %}
+    {% for fund_code, fund_data in authorised_funds %}
+        <div class="fund">
+            <h3>{{ fund_data.fund.fund_name }}</h3>
+            <a href="/report/{{ fund_code }}" class="btn btn-primary">Start</a>
+        </div>
+    {% endfor %}
+{% endblock content %}
