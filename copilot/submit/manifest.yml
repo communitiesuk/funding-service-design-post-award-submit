@@ -76,6 +76,8 @@ environments:
         path: /healthcheck
         port: 8080
   dev:
+    variables:
+      MAINTENANCE_MODE: true
     sidecars:
       nginx:
         port: 8087
