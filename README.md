@@ -1,5 +1,7 @@
 # funding-service-design-post-award-submit
 
+_This repository is no longer in use, superseded by the migration to a monolith in https://github.com/communitiesuk/funding-service-design-post-award-data-store/pull/641_
+
 ## Setup
 Install Python 3.11 (instructions assume Python 3 is installed on your PATH as `python` but may be `python3` on OSX)
 
